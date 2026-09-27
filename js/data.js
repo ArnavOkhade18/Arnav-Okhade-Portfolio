@@ -124,8 +124,7 @@ const PORTFOLIO_DATA = {
     }
   ],
 
-  caseStudies: [
-        {
+  featuredProduct: {
       id: "financial-model-analyzer",
       featured: true,
       tag: "AI Product / Equity Research",
@@ -213,6 +212,7 @@ const PORTFOLIO_DATA = {
       }
     },
 
+  caseStudies: [
     {
       id: "heal-2025",
       title: "Transforming Healthcare Supply Chains via Control Tower & Federated Procurement",

@@ -185,28 +185,7 @@ function renderHomeView() {
           </div>
         </div>
 
-        <!-- Bento 4: Selected National Shortlist Case Studies (12 Cols) -->
-        <div class="bento-card bento-col-12" style="cursor: default;">
-          <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 20px;">
-            <div>
-              <span class="case-tag-pill">Selected Competitions</span>
-              <h3 style="font-size: 1.2rem; font-weight: 600; margin-top: 6px;">National Finalist & Shortlisted Case Studies</h3>
-              <p style="font-size: 0.82rem; color: var(--text-dim); margin-top: 2px;">Projects from national corporate challenges where we reached the final and semifinal stages.</p>
-            </div>
-            <button class="btn btn-secondary" onclick="Router.navigate('#case-studies')">
-              <span>Explore All Projects</span>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"></path><path d="M12 5l7 7-7 7"></path></svg>
-            </button>
-          </div>
-
-          <div class="case-study-grid" style="margin-bottom: 0;">
-            ${flagships
-              .map((item) => renderCaseCardHTML(item))
-              .join("")}
-          </div>
-        </div>
-
-        <!-- Bento 5: Featured AI Product (6 Cols) -->
+        <!-- Bento 4: Featured AI Product (6 Cols) -->
         <div class="bento-card bento-col-6">
           <div>
             <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 8px;">
@@ -230,18 +209,15 @@ function renderHomeView() {
               <span class="skill-tag" style="color: var(--accent-cyan);">Streamlit</span>
             </div>
           </div>
-          <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 14px; border-top: 1px solid var(--border-color); gap: 10px; flex-wrap: wrap;">
-            <a href="https://financial-model-impact-agent.streamlit.app/" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="padding: 6px 14px; font-size: 0.82rem;">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-              <span>Launch Live App</span>
-            </a>
-            <span onclick="Router.navigate('#case/financial-model-analyzer')" style="font-size: 0.82rem; color: var(--accent-cyan); cursor: pointer; font-weight: 500;">
-              View Case Study →
+          <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 14px; border-top: 1px solid var(--border-color);">
+            <span onclick="Router.navigate('#case/financial-model-analyzer')" style="font-size: 0.85rem; color: var(--accent-cyan); cursor: pointer; font-weight: 600;">
+              Explore Architecture & System Spec →
             </span>
+            <span style="font-size: 0.75rem; color: var(--text-dim);">Decision-Support Tool</span>
           </div>
         </div>
 
-        <!-- Bento 6: Frameworks Vault Portal (6 Cols) -->
+        <!-- Bento 5: Frameworks Vault Portal (6 Cols) -->
         <div class="bento-card bento-col-6" onclick="Router.navigate('#frameworks')">
           <div>
             <span class="case-tag-pill">Mental Models</span>
@@ -253,6 +229,27 @@ function renderHomeView() {
           <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 14px; border-top: 1px solid var(--border-color);">
             <span style="font-size: 0.85rem; color: var(--accent-primary); font-weight: 600;">Explore Mental Models →</span>
             <span style="font-size: 0.75rem; color: var(--text-dim);">5 Frameworks</span>
+          </div>
+        </div>
+
+        <!-- Bento 6: Selected National Shortlist Case Studies (12 Cols) -->
+        <div class="bento-card bento-col-12" style="cursor: default;">
+          <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 20px;">
+            <div>
+              <span class="case-tag-pill">Selected Competitions</span>
+              <h3 style="font-size: 1.2rem; font-weight: 600; margin-top: 6px;">National Finalist & Shortlisted Case Studies</h3>
+              <p style="font-size: 0.82rem; color: var(--text-dim); margin-top: 2px;">Projects from national corporate challenges where we reached the final and semifinal stages.</p>
+            </div>
+            <button class="btn btn-secondary" onclick="Router.navigate('#case-studies')">
+              <span>Explore All Competitions</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"></path><path d="M12 5l7 7-7 7"></path></svg>
+            </button>
+          </div>
+
+          <div class="case-study-grid" style="margin-bottom: 0;">
+            ${flagships
+              .map((item) => renderCaseCardHTML(item))
+              .join("")}
           </div>
         </div>      </div>
 
@@ -415,7 +412,10 @@ function renderCaseCardHTML(item) {
 // --------------------------------------------------------------------------
 function renderCaseDetailView(caseId) {
   const vp = document.getElementById("appViewport");
-  const caseItem = PORTFOLIO_DATA.caseStudies.find((c) => c.id === caseId);
+  let caseItem = PORTFOLIO_DATA.caseStudies.find((c) => c.id === caseId);
+  if (!caseItem && PORTFOLIO_DATA.featuredProduct && PORTFOLIO_DATA.featuredProduct.id === caseId) {
+    caseItem = PORTFOLIO_DATA.featuredProduct;
+  }
 
   if (!caseItem) {
     vp.innerHTML = `
@@ -489,8 +489,11 @@ function renderCaseDetailView(caseId) {
 
   // Prev / Next index
   const currentIndex = PORTFOLIO_DATA.caseStudies.findIndex((c) => c.id === caseId);
-  const prevCase = PORTFOLIO_DATA.caseStudies[currentIndex - 1];
-  const nextCase = PORTFOLIO_DATA.caseStudies[currentIndex + 1];
+  const prevCase = currentIndex > 0 ? PORTFOLIO_DATA.caseStudies[currentIndex - 1] : null;
+  const nextCase = (currentIndex >= 0 && currentIndex < PORTFOLIO_DATA.caseStudies.length - 1) ? PORTFOLIO_DATA.caseStudies[currentIndex + 1] : null;
+  const isFeaturedAi = PORTFOLIO_DATA.featuredProduct && PORTFOLIO_DATA.featuredProduct.id === caseId;
+  const backTarget = isFeaturedAi ? "#home" : "#case-studies";
+  const backLabel = isFeaturedAi ? "Back to Home" : "All Case Studies";
 
   const prevBtnHTML = prevCase
     ? `<button class="pagination-btn" onclick="Router.navigate('#case/${prevCase.id}')"><span>← Previous Project</span><strong>${prevCase.title.slice(0, 32)}...</strong></button>`
@@ -505,9 +508,9 @@ function renderCaseDetailView(caseId) {
       
       <!-- Top Navigation & Actions Bar -->
       <div class="case-header-nav">
-        <button class="back-to-dir-btn" onclick="Router.navigate('#podium')">
+        <button class="back-to-dir-btn" onclick="Router.navigate('${backTarget}')">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
-          <span>All Case Studies</span>
+          <span>${backLabel}</span>
         </button>
 
         <div class="case-action-group">
